@@ -1,62 +1,31 @@
-# OAuth2Learn
+# OAuth2 Google Login Project
 
-Simple Spring Boot 3.4.5 application demonstrating OAuth2 login with Google.
+This is a Spring Boot project implementing OAuth2 login using Google as an authentication provider. It demonstrates how to configure Spring Security to use OAuth2, handle login, logout, and display user information after authentication.
 
----
+## Features
+- OAuth2 login with Google.
+- Logout functionality with a redirection to a custom page (`/whoami`).
+- Displays a personalized greeting on the home page after successful login.
+- Simple controller to display "Hello, Guest!" if the user is not authenticated.
+- Handles logout and clears the session properly.
 
-## Tech Stack
-
-```
-- Java 17
-- Spring Boot 3.4.5
-- Spring OAuth2 Client
-- Maven
-```
-
----
-
-## Project Structure
-
-```
-src/
- ├── main/
- │    ├── java/
- │    │    └── com/estherbaby/oauth2learn/
- │    │         ├── OAuth2LearnApplication.java
- │    │         ├── controller/
- │    │         │    └── HomeController.java
- │    └── resources/
- │         └── application.properties
-```
-
----
+## Prerequisites
+- Java 17 or later.
+- Maven 3.8+.
+- A Google OAuth2 client ID and secret.
 
 ## Setup Instructions
 
-### 1. Prerequisites
-
-```
-- Java 17+
-- Maven 3.8+
-- Google OAuth2 Credentials:
-    * Create a project in https://console.cloud.google.com
-    * Create OAuth Client ID (Web)
-    * Add redirect URI:
-      http://localhost:8080/login/oauth2/code/google
-```
-
----
-
-### 2. Clone the Repository
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/oauth2-learn.git
-cd oauth2-learn
+git clone https://github.com/your-repo/oauth2-google-login.git
+cd oauth2-google-login
 ```
 
----
+### 2. Update `application.properties`
 
-### 3. Configure `application.properties`
+In the `src/main/resources/application.properties` file, configure your Google OAuth2 credentials as follows:
 
 ```properties
 server.port=8080
@@ -70,92 +39,37 @@ spring.security.oauth2.client.registration.google.client-name=Google
 
 > 🔐 Replace YOUR_GOOGLE_CLIENT_ID and YOUR_GOOGLE_CLIENT_SECRET with your actual Google credentials.
 
----
+Make sure to replace `YOUR_GOOGLE_CLIENT_ID` and `YOUR_GOOGLE_CLIENT_SECRET` with your actual Google credentials.
 
-### 4. Build and Run
+### 3. Run the application
 
 ```bash
-mvn clean install
 mvn spring-boot:run
 ```
 
-Open: [http://localhost:8080](http://localhost:8080)
+Once the application is running, you can visit `http://localhost:8080` to see the login page.
 
----
+### 4. How the App Works
 
-## Endpoints
+- **Home Page (`/`)**: Displays a greeting message based on the user’s login status. If logged in, it shows "Hello, [username]"; otherwise, it shows "Hello, Guest!".
+- **Secured Page (`/secured`)**: This is a secured page, visible only after authentication. It confirms that the user is authenticated.
+- **Logout Page (`/logout-link`)**: Displays a logout link. Clicking on this link logs the user out and redirects them to `/whoami`.
+- **Whoami Page (`/whoami`)**: After logout, the `/whoami` page will show "You are logged out".
 
-```
-+------------+------------+-----------------------------------------+
-|   URL      |  Access    |               Description               |
-+------------+------------+-----------------------------------------+
-| /          | Secured    | Displays Google user's name             |
-| /secured   | Secured    | Displays a secured page message         |
-+------------+------------+-----------------------------------------+
-```
+### 5. Logout Functionality
 
----
+After clicking the "Logout" button:
+- The session is invalidated.
+- The user is redirected to the `/whoami` page.
+- The `/whoami` page displays "You are logged out.".
 
-## How It Works
+### 6. Notes
+- The user is redirected to `/whoami` after logging out, and the page will display their logout status.
+- This app uses Spring Security's default OAuth2 login flow, with no custom UI for login/logout, and it handles sessions, cookies, and security configurations automatically.
 
-```
-- You visit `/` → redirected to Google Login.
-- After login → shows "Hello, {your_name}".
-- `/secured` → available only if authenticated.
-```
+## Troubleshooting
 
----
-
-## Notes
-
-```
-- No database integration — just OAuth2 login.
-- Extendable to use role-based security and persistence.
-- Great for learning Spring Security with OAuth2.
-```
-
----
-
-## Author
-
-```
-Esther Baby
-GitHub: https://github.com/yourusername
-```
-
----
-
-## Google User Attributes
-
-```
-principal.getAttribute("name")
-principal.getAttribute("email")
-principal.getAttribute("picture")
-principal.getAttribute("sub") // Google user ID
-```
-
----
-
-## Future Enhancements
-
-```
-- Add multiple OAuth2 providers (e.g., GitHub, Facebook)
-- Save user info to a database
-- Add roles and authorities
-- Integrate JWT for stateless APIs
-- Custom login success handler
-```
-
----
-
-## Example Flow
-
-```
-Step 1: Access http://localhost:8080
-Step 2: Redirects to Google login
-Step 3: Login → Redirect back with user info
-Step 4: Displays greeting with your Google name
-Step 5: Visit /secured → Allowed only if logged in
-```
+- If you encounter any issues during login or logout, check your Google API credentials (client ID and secret) and ensure the correct redirect URI is configured.
+- If you see a `404 Not Found` for favicon.ico, it's due to missing favicon assets. You can safely ignore this in development.
 
 ---
